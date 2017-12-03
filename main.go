@@ -51,12 +51,12 @@ func (h *heatmap) draw() {
 		for _, db := range reading.dbs {
 			x = x+1
 			heat := uint8((db-h.valley_db)*h.db_multiplier)
-			col = color.RGBA{0, 0, heat+50, 255}
+			col = color.RGBA{0, heat, heat, 255}
 			img.Set(x, y, col)
 		}
 	}
 
-	f, err := os.Create("draw.png")
+	f, err := os.Create(os.Args[2])
 	if err != nil {
 		panic(err)
 	}
@@ -77,7 +77,7 @@ func main() {
 	rows := 0
 
 	// read
-	file, err := os.Open("data/sample.csv")
+	file, err := os.Open(os.Args[1])
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return
