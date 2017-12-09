@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+//	"fmt"
 	"image"
 	"image/color"
 	"image/png"
@@ -9,35 +9,25 @@ import (
 )
 
 type heatmap struct {
-	readings []reading
+	data_set DataSet
 	config Config
-	peak_db float64
-	valley_db float64
-	db_difference float64
-	db_multiplier float64
-	lowest_hz float64
-	highest_hz float64
-	hz_difference float64
-	hz_multiplier float64
-	hz_width float64
-	rows int
 }
 
 func (h *heatmap) draw() {
-	var img = image.NewRGBA(image.Rect(0, 0, int(h.hz_width), h.rows))
+	var img = image.NewRGBA(image.Rect(0, 0, int(h.data_set.hz_width), h.data_set.rows))
 	var col color.Color
 
 	// draw
 	x := -1
 	y := -1
-	for _, reading := range h.readings {
-		if ( reading.hz_low == h.lowest_hz ) {
+	for _, reading := range h.data_set.readings {
+		if ( reading.hz_low == h.data_set.lowest_hz ) {
 			x = -1
 			y = y+1
 		}
 		for _, db := range reading.dbs {
 			x = x+1
-			heat := uint8((db-h.valley_db)*h.db_multiplier)
+			heat := uint8((db-h.data_set.valley_db)*h.data_set.db_multiplier)
 			col = color.RGBA{0, heat, heat, 255}
 			img.Set(x, y, col)
 		}
